@@ -141,7 +141,7 @@ void EFieldSolver::analyseBeam(vector<Particle> *beam){
     ycen /= static_cast<double>(npart);
 
     // calculate radial extension of particle distribution
- //   d
+    //   d
 
     double rbound = 0;
     for (int i = 0; i < npart; i++) {

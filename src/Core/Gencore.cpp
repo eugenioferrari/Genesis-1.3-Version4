@@ -1,7 +1,7 @@
 #include "Gencore.h"
 
 #ifdef USE_DPI
-  #include "DiagnosticHookS.h"
+#include "DiagnosticHookS.h"
 #endif
 
 extern bool MPISingle;
@@ -16,9 +16,9 @@ bool Gencore::run(Beam *beam, vector<Field*> *field, Setup *setup, Undulator *un
     //
     int size=1;
     int rank=0;
-	if (!MPISingle){
-	    MPI_Comm_rank(MPI_COMM_WORLD, &rank); // assign rank to node
-	    MPI_Comm_size(MPI_COMM_WORLD, &size); // assign rank to node
+    if (!MPISingle){
+        MPI_Comm_rank(MPI_COMM_WORLD, &rank); // assign rank to node
+        MPI_Comm_size(MPI_COMM_WORLD, &size); // assign rank to node
     }
 
     if (rank==0) {
@@ -26,7 +26,7 @@ bool Gencore::run(Beam *beam, vector<Field*> *field, Setup *setup, Undulator *un
     }
 
     //-----------------------------------------
-	// init beam, field and undulator class
+    // init beam, field and undulator class
 
     string rn, fnbase;
     setup->getRootName(&rn);
@@ -96,104 +96,105 @@ bool Gencore::run(Beam *beam, vector<Field*> *field, Setup *setup, Undulator *un
     diag.init(rank, size, und->outlength(), beam->beam.size(),field->size(),isTime,isScan,filter);
     diag.calc(beam, field, und->getz());  // initial calculation
 
-	/*************/
-	/* MAIN LOOP */
-	/*************/
-	while(und->advance(rank))
-	{
-	  double delz=und->steplength();
+    /*************/
+    /* MAIN LOOP */
+    /*************/
+    while(und->advance(rank))
+    {
+        double delz=und->steplength();
 
-	  // ----------------------------------------
-	  // step 1 - apply most marker action  (always at beginning of a step)
-	  bool error_IO=false;
-	  bool sort=control->applyMarker(beam, field, und, error_IO);
-	  if(error_IO) {
-	    return(false);
-	  }
-
-
-	  // ---------------------------------------
-	  // step 2 - Advance electron beam
-
-	  beam->track(delz,field,und);
-
-	  // -----------------------------------------
-	  // step 3 - Beam post processing, e.g. sorting
-
-
-	  if (sort){
-	    int shift=beam->sort();
-
-	    if (shift!=0){
-	      for (int i=0;i<field->size();i++){
-		      control->applySlippage(shift, field->at(i));
-	      }
-	    }
-	  }
-  
-	  // ---------------------------------------
-	  // step 4 - Advance radiation field
-
-	  for (int i=0; i<field->size();i++){
-	    field->at(i)->track(delz,beam,und);
-	  }
-
-
-	  //-----------------------------------------
-	  // step 5 - Apply slippage
-
-	  for (int i=0;i<field->size();i++){
-	    control->applySlippage(und->slippage(), field->at(i));  
-	  }
-
-	  //-------------------------------
-	  // step 6 - Calculate beam parameter stored into a buffer for output
-
-	  //beam->diagnostics(und->outstep(),und->getz());
-	  //for (int i=0;i<field->size();i++){
-	  //  field->at(i)->diagnostics(und->outstep());
-	  //}
-
-	  if (und->outstep()) {
-	    diag.calc(beam, field, und->getz());
-	  }
-	}
-     
-        //---------------------------
-        // end and clean-up 
-
-	// perform last marker action
+        // ----------------------------------------
+        // step 1 - apply most marker action  (always at beginning of a step)
+        if (rank==0) { cout << "Marker in loop..."  << endl; }
         bool error_IO=false;
-	bool sort=control->applyMarker(beam, field, und, error_IO);
-	if(error_IO) {
-	  return(false);
-	}
-	if (sort){
-	    int shift=beam->sort();
-
-	    if (shift!=0){
-	      for (int i=0;i<field->size();i++){
-		    control->applySlippage(shift, field->at(i));
-	      }
-	    }
-	}
+        bool sort=control->applyMarker(beam, field, und, error_IO);
+        if(error_IO) {
+            return(false);
+        }
 
 
-	/* write out diagnostic arrays */
-	if (rank==0){
-	  cout << "Writing output file..." << endl;
-	}
+        // ---------------------------------------
+        // step 2 - Advance electron beam
 
-	// control->output(beam,field,und,diag);
-	if(!diag.writeToOutputFile(beam, field, setup, und)) {
-	  delete control;
-	  return(false);
-	}
+        beam->track(delz,field,und);
 
-	delete control;
-      
+        // -----------------------------------------
+        // step 3 - Beam post processing, e.g. sorting
+
+
+        if (sort){
+            int shift=beam->sort();
+
+            if (shift!=0){
+                for (int i=0;i<field->size();i++){
+                    control->applySlippage(shift, field->at(i));
+                }
+            }
+        }
+
+        // ---------------------------------------
+        // step 4 - Advance radiation field
+
+        for (int i=0; i<field->size();i++){
+            field->at(i)->track(delz,beam,und);
+        }
+
+
+        //-----------------------------------------
+        // step 5 - Apply slippage
+        if (rank==0) { cout << "Apply slippage in loop..."  << endl; }
+        for (int i=0;i<field->size();i++){
+            control->applySlippage(und->slippage(), field->at(i));
+        }
+
+        //-------------------------------
+        // step 6 - Calculate beam parameter stored into a buffer for output
+
+        //beam->diagnostics(und->outstep(),und->getz());
+        //for (int i=0;i<field->size();i++){
+        //  field->at(i)->diagnostics(und->outstep());
+        //}
+
+        if (und->outstep()) {
+            diag.calc(beam, field, und->getz());
+        }
+    }
+
+    //---------------------------
+    // end and clean-up
+    if (rank==0) { cout << "Last marker..."  << endl; }
+    // perform last marker action
+    bool error_IO=false;
+    bool sort=control->applyMarker(beam, field, und, error_IO);
+    if(error_IO) {
+        return(false);
+    }
+    if (sort){
+        int shift=beam->sort();
+
+        if (shift!=0){
+            for (int i=0;i<field->size();i++){
+                control->applySlippage(shift, field->at(i));
+            }
+        }
+    }
+
+
+    /* write out diagnostic arrays */
     if (rank==0){
-	  cout << endl << "Core Simulation done." << endl;
+        cout << "Writing output file..." << endl;
+    }
+
+    // control->output(beam,field,und,diag);
+    if(!diag.writeToOutputFile(beam, field, setup, und)) {
+        delete control;
+        return(false);
+    }
+
+    delete control;
+
+    if (rank==0){
+        cout << endl << "Core Simulation done." << endl;
     }
     return(true);
 }

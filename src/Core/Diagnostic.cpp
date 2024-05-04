@@ -13,46 +13,46 @@
 
 Diagnostic::Diagnostic()
 {
-	MPI_Comm_rank(MPI_COMM_WORLD, &my_rank_);
+    MPI_Comm_rank(MPI_COMM_WORLD, &my_rank_);
 }
 
 Diagnostic::~Diagnostic()
 {
 #if 0
-	if(my_rank_==0) {
+    if(my_rank_==0) {
 		cout << "Diagnostic::~Diagnostic()" << endl;
 	}
 #endif
 
-	for(auto &d: dfield) {
-		delete d;
-	}
-	for(auto &d: dbeam) {
-		delete d;
-	}
+    for(auto &d: dfield) {
+        delete d;
+    }
+    for(auto &d: dbeam) {
+        delete d;
+    }
 }
 
 bool Diagnostic::add_beam_diag(DiagBeamBase *pd)
 {
-	// stop if vectors holding the instances of diagnostic classes are locked
-	if(!diag_can_add)
-		return(false);
+    // stop if vectors holding the instances of diagnostic classes are locked
+    if(!diag_can_add)
+        return(false);
 
-	dbeam.push_back(pd);
+    dbeam.push_back(pd);
 
-	return(true);
+    return(true);
 }
 
 // Finally, instances of diagnostic class are to be deleted by this class
 bool Diagnostic::add_field_diag(DiagFieldBase *pd)
 {
-	// stop if vectors holding the instances of diagnostic classes are locked
-	if(!diag_can_add)
-		return(false);
+    // stop if vectors holding the instances of diagnostic classes are locked
+    if(!diag_can_add)
+        return(false);
 
-	dfield.push_back(pd);
+    dfield.push_back(pd);
 
-	return(true);
+    return(true);
 }
 
 //----------------------------------------------------------
@@ -66,7 +66,7 @@ void Diagnostic::init(int rank, int size, int nz_in, int ns_in, int nfld,bool is
     // lock the vectors holding the instances of diagnostic classes
     diag_can_add=false;
 
- //   FilterDiagnostics filter;
+    //   FilterDiagnostics filter;
     nz = nz_in;
     ns = ns_in;
     time = isTime;
@@ -196,7 +196,7 @@ bool Diagnostic::writeToOutputFile(Beam *beam, vector<Field*> *field, Setup *set
         df=0;
     }
     for (int i=0; i<ntotal; i++){
-      global[i]=e0+static_cast<double>(i)*df-0.5*df*static_cast<double>(ntotal);
+        global[i]=e0+static_cast<double>(i)*df-0.5*df*static_cast<double>(ntotal);
     }
     this->addOutput(1,"frequency","eV",global);
 
@@ -207,10 +207,10 @@ bool Diagnostic::writeToOutputFile(Beam *beam, vector<Field*> *field, Setup *set
         Output out;
 //    string file=root.append(".test"); // CL, 2023-10-16: variable 'root' was renamed
         if(!out.open(fnout,noff,ns)) {
-          if(my_rank_==0) {
-            cout << "   unable to open output file" << endl;
-          }
-          return(false);
+            if(my_rank_==0) {
+                cout << "   unable to open output file" << endl;
+            }
+            return(false);
         }
         out.writeMeta(und);
         out.writeGroup("Lattice",val[0], units[0],single[0]);
@@ -226,15 +226,15 @@ bool Diagnostic::writeToOutputFile(Beam *beam, vector<Field*> *field, Setup *set
         }
         out.close();
     } else {
-       /* debug option to suppress .out.h5 file is ON: generate info file instead */
-       if(my_rank_==0) {
-           stringstream ss;
-           ofstream ofs;
-           ss << fnout << ".suppressed";
-           ofs.open(ss.str(), ofstream::out);
-           ofs.close();
-           cout << "   INFO: debug option to suppress writing of .out.h5 file is set" << endl;
-       }
+        /* debug option to suppress .out.h5 file is ON: generate info file instead */
+        if(my_rank_==0) {
+            stringstream ss;
+            ofstream ofs;
+            ss << fnout << ".suppressed";
+            ofs.open(ss.str(), ofstream::out);
+            ofs.close();
+            cout << "   INFO: debug option to suppress writing of .out.h5 file is set" << endl;
+        }
     }
 
 
@@ -242,8 +242,8 @@ bool Diagnostic::writeToOutputFile(Beam *beam, vector<Field*> *field, Setup *set
     {
         Output out_meta;
         if(!out_meta.open(fnmeta,
-               noff /* controls which node is writing the strings to the hdf5 file */,
-               ns))
+                          noff /* controls which node is writing the strings to the hdf5 file */,
+                          ns))
         {
             if(my_rank_==0) {
                 cout << "   unable to open output file" << endl;
@@ -397,27 +397,27 @@ void DiagBeam::getValues(Beam *beam,std::map<std::string,std::vector<double> >&v
             b[iharm] = 0;
         }
         for (auto const &par: slice){
-           x1 += par.x;
-           x2 += par.x*par.x;
-           y1 += par.y;
-           y2 += par.y*par.y;
-           g1 += par.gamma;
-           g2 += par.gamma*par.gamma;
-           px1 += par.px;
-           py1 += par.py;
-           px2 += par.px*par.px;
-           py2 += par.py*par.py;
-           xpx += par.x*par.px;
-           ypy += par.y*par.py;
+            x1 += par.x;
+            x2 += par.x*par.x;
+            y1 += par.y;
+            y2 += par.y*par.y;
+            g1 += par.gamma;
+            g2 += par.gamma*par.gamma;
+            px1 += par.px;
+            py1 += par.py;
+            px2 += par.px*par.px;
+            py2 += par.py*par.py;
+            xpx += par.x*par.px;
+            ypy += par.y*par.py;
 //           complex<double> phasor = complex<double> (cos(par.theta),sin(par.theta));
 //           complex<double> phasor_acc = phasor;
 //           b[0] += phasor;
-           for(int iharm=0; iharm<nharm;iharm++){
- //              phasor_acc *= phasor;
+            for(int iharm=0; iharm<nharm;iharm++){
+                //              phasor_acc *= phasor;
 //               b[iharm]+=phasor_acc;
                 b[iharm]+=complex<double> (cos((iharm+1)*par.theta),sin((iharm+1)*par.theta));
 //                b[iharm]+=phasor*phasor;
-           }
+            }
         }
         if (filter["aux"]){
             for (auto const &par: slice){
@@ -532,7 +532,7 @@ void DiagBeam::getValues(Beam *beam,std::map<std::string,std::vector<double> >&v
     if (global){
         int size = 1;
         if (!MPISingle) { MPI_Comm_size(MPI_COMM_WORLD, &size); }  // for future functionality to do scan functionality of time-dependent runs!
-                                                                    // this will be better controlled in the future with a dedicated MPI class (RAII)
+        // this will be better controlled in the future with a dedicated MPI class (RAII)
         if (size>1){
             double temp;
             MPI_Allreduce(&g_cur, &temp, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
@@ -690,7 +690,7 @@ void DiagField::getValues(Field *field,std::map<std::string,std::vector<double> 
     double ks=4.*asin(1)/field->xlambda;
     double scl=field->dgrid*eev/ks;
     double scltheta=field->xlambda/ngrid/field->dgrid;
- //   std::cout  << "new: " << scltheta << " " << field->xlambda << " " << ngrid << std::endl;
+    //   std::cout  << "new: " << scltheta << " " << field->xlambda << " " << ngrid << std::endl;
     double shift=-0.5*static_cast<double> (ngrid-1);
 //    double shift=-0.5*static_cast<double> (ngrid);
 

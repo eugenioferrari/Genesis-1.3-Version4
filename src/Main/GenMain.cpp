@@ -48,7 +48,7 @@
 #include "SemaFile.h"
 #include "FieldManipulator.h"
 #ifdef USE_DPI
-  #include "RegPlugin.h"
+#include "RegPlugin.h"
 #endif
 #include "SeriesManager.h"
 #include "SeriesParser.h"
@@ -59,7 +59,7 @@
 using namespace std;
 
 const double vacimp = 376.73;
-const double eev    = 510999.06; 
+const double eev    = 510999.06;
 const double ce     = 4.8032045e-11;
 
 // info for the meta group in the hdf5 output file
@@ -452,14 +452,14 @@ int genmain (string inputfile, map<string,string> &comarg, bool split) {
             break;
         }
 
-	      if (element.compare("&simple_handshake")==0){
+        if (element.compare("&simple_handshake")==0){
             SimpleHandshake *hs=new SimpleHandshake;
             string prefix;
             setup->getOutputdir(&prefix);
-	        if (!hs->doit(prefix)){ break;}
+            if (!hs->doit(prefix)){ break;}
             delete hs;
-            continue;  
-          } 
+            continue;
+        }
 
         //-----------------------------------------------------
         // error because the element typ is not defined
@@ -501,65 +501,65 @@ int genmain (string inputfile, map<string,string> &comarg, bool split) {
 
     // release memory allocated for fields
     for (int i = 0; i < field.size(); i++) {
-    delete field[i];
-}
+        delete field[i];
+    }
 
-	/*
-	 * Synchronization, without in some cases the semaphore file
-	 * can be written while some MPI processes are still processing
-	 * the final command block.
-	 */
-	MPI_Barrier(MPI_COMM_WORLD);
+    /*
+     * Synchronization, without in some cases the semaphore file
+     * can be written while some MPI processes are still processing
+     * the final command block.
+     */
+    MPI_Barrier(MPI_COMM_WORLD);
 
-	/* take time stamp (I/O for generating semaphore file could skew result if file system is busy) */ 
-	//	event.push_back("end");
-	//	evtime.push_back(double(clocknow-clockstart));
-	clocknow=clock();
+    /* take time stamp (I/O for generating semaphore file could skew result if file system is busy) */
+    //	event.push_back("end");
+    //	evtime.push_back(double(clocknow-clockstart));
+    clocknow=clock();
 
 
-        /* NOW, generate the semaphore file */
-        if (semafile_en) {
-          if(successful_run) {
+    /* NOW, generate the semaphore file */
+    if (semafile_en) {
+        if(successful_run) {
             SemaFile sema;
             if (rank==0) {
-              if(semafile_fn_valid) {
-                sema.put(semafile_fn);
-                cout << endl << "generating semaphore file " << semafile_fn << endl;
-              } else {
-                cout << endl << "error: not writing semaphore file, filename not defined" << endl;
-              }
+                if(semafile_fn_valid) {
+                    sema.put(semafile_fn);
+                    cout << endl << "generating semaphore file " << semafile_fn << endl;
+                } else {
+                    cout << endl << "error: not writing semaphore file, filename not defined" << endl;
+                }
             }
-          } else {
+        } else {
             if (rank==0) {
-              cout << endl << "not writing semaphore file, as the run likely was not successful" << endl;
+                cout << endl << "not writing semaphore file, as the run likely was not successful" << endl;
             }
-          }
         }
+    }
 
 
- 	if (rank==0) {
-	  double elapsed_Sec=double(clocknow-clockstart)/CLOCKS_PER_SEC;
+    if (rank==0) {
+        double elapsed_Sec=double(clocknow-clockstart)/CLOCKS_PER_SEC;
 
-      time(&timer);
-      cout << endl<< "Program is terminating..." << endl;
-	  cout << "Ending Time: " << ctime(&timer);
-	  cout << "Total Wall Clock Time: " << elapsed_Sec << " seconds" << endl;
-      cout << "-------------------------------------" << endl;
+        time(&timer);
+        cout << endl<< "Program is terminating..." << endl;
+        cout << "Ending Time: " << ctime(&timer);
+        cout << "Total Wall Clock Time: " << elapsed_Sec << " seconds" << endl;
+        cout << "-------------------------------------" << endl;
 
 
-	  /* tracing report
-	  cout << "Tracing Summary" << endl;
-	  cout << "==========================" << endl;
-	  cout << setw(10) << "Event" << setw(8) << "dT (s)" << endl;
-	  cout << "--------------------------" << endl;
-	  for (int i=0; i<evtime.size(); i++){
-	    cout << setw(10) << event[i] << setw(8) << evtime[i]/CLOCKS_PER_SEC << " " << endl;
-	  }
-	  cout << "--------------------------" << endl;
-	  */
+        /* tracing report
+        cout << "Tracing Summary" << endl;
+        cout << "==========================" << endl;
+        cout << setw(10) << "Event" << setw(8) << "dT (s)" << endl;
+        cout << "--------------------------" << endl;
+        for (int i=0; i<evtime.size(); i++){
+          cout << setw(10) << event[i] << setw(8) << evtime[i]/CLOCKS_PER_SEC << " " << endl;
         }
+        cout << "--------------------------" << endl;
+        */
+    }
 
 
-        ret = (successful_run) ? 0 : 1;
-        return(ret);
+    ret = (successful_run) ? 0 : 1;
+    return(ret);
 }
