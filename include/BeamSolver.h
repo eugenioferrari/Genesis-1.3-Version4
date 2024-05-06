@@ -57,17 +57,17 @@ inline double BeamSolver::getSCField(int islice){
 }
 
 inline void BeamSolver::initEField(double rmax, int ngrid, int nz, int nphi, double lambda, bool longr){
-  efield.init(rmax,ngrid,nz,nphi,lambda,longr);
+    efield.init(rmax,ngrid,nz,nphi,lambda,longr);
 }
 
 
 inline void BeamSolver::track(double dz, Beam *beam, Undulator *und, bool last)
 {
-  tracker.track(dz,beam,und,last);
+    tracker.track(dz,beam,und,last);
 }
 
 inline void BeamSolver::applyR56(Beam *beam, Undulator *und, double reflen){
-  tracker.applyR56(beam,und,reflen);
+    tracker.applyR56(beam,und,reflen);
 }
 
 
