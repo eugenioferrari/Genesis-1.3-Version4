@@ -31,12 +31,13 @@ bool Control::applyMarker(Beam *beam, vector<Field*>*field, Undulator *und, bool
     stringstream sroot;
     string basename;
     int istepz=und->getStep();
-    cout << "Marker at step " << istepz << endl;
+    // if (rank==0) { cout << "Marker at step " << istepz << endl; }
     sroot << "." << istepz;
     basename=root+sroot.str();
 
 
     if ((marker & 1) != 0){
+        // if (rank==0) { cout << "Field dump" << endl; }
         WriteFieldHDF5 dump;
         if(dump.write(basename,field))
         {
@@ -55,6 +56,7 @@ bool Control::applyMarker(Beam *beam, vector<Field*>*field, Undulator *und, bool
     }
 
     if ((marker & 2) != 0){
+        // if (rank==0) { cout << "Beam dump" << endl; }
         WriteBeamHDF5 dump;
         if(dump.write(basename,beam,1))   // use stride of 1 -> all particles are dump
         {
