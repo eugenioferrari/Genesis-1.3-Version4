@@ -352,7 +352,7 @@ void EFieldSolver::hghgRange(vector<Particle> *beam, double current, double slic
             s_now = beam->at(j).theta * slicelength / (2 * pi) - t_phase;
             bunching += exp(i * k_seed * s_now * double(nh));
         }
-        Bh = abs(bunching) / double(part);
+        Bh = abs(bunching) / double(npart);
         for (int j = 0; j < npart; ++j) {
             s_now = beam->at(j).theta * slicelength / (2 * pi) - t_phase;
             hghgez[j] += Bh * sin(double(nh) * k_seed * s_now) / double(nh);
