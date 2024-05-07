@@ -338,9 +338,9 @@ void EFieldSolver::hghgRange(vector<Particle> *beam, double current, double slic
     double s_now;
     for (int j = 0; j < npart; ++j) {
         s_now = beam->at(j).theta * slicelength / (2 * pi);
-        bunching += exp(i * k_seed * s_now * 1)
+        bunching += exp(i * k_seed * s_now * double(1))
     }
-    bunching /= npart;
+    bunching /= double(npart);
     double bunching_phase = arg(bunching);
     double t_phase = bunching_phase * slicespacing / (2 * pi);
 
@@ -350,12 +350,12 @@ void EFieldSolver::hghgRange(vector<Particle> *beam, double current, double slic
         bunching = 0;
         for (int j = 0; j < npart; ++j) {
             s_now = beam->at(j).theta * slicelength / (2 * pi) - t_phase;
-            bunching += exp(i * k_seed * s_now * nh);
+            bunching += exp(i * k_seed * s_now * double(nh));
         }
-        Bh = abs(bunching) / part;
+        Bh = abs(bunching) / double(part);
         for (int j = 0; j < npart; ++j) {
             s_now = beam->at(j).theta * slicelength / (2 * pi) - t_phase;
-            hghgez[j] += Bh * sin(nh * k_seed * s_now) / nh;
+            hghgez[j] += Bh * sin(double(nh) * k_seed * s_now) / double(nh);
         }
     }
     // finally convert to deltagamma
@@ -363,7 +363,7 @@ void EFieldSolver::hghgRange(vector<Particle> *beam, double current, double slic
     double dgamma = 0;
     for (int j = 0; j < npart; ++j) {
         dgamma = hghgez[j] * 2 * Q * n0 / (eps0 * k_seed) * Ldrift / me_eV;
-        hghgez[j] += Bh * sin(nh * k_seed * s_now) / nh;
+        hghgez[j] += Bh * sin(double(nh) * k_seed * s_now) / double(nh);
     }
     /*
      data_space = fid[f'{sliceID}/theta'][()] * slicelength / (2 * np.pi)
