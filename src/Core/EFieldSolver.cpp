@@ -363,7 +363,7 @@ void EFieldSolver::hghgRange(vector<Particle> *beam, double current, double slic
     double dgamma = 0;
     for (int j = 0; j < npart; ++j) {
         dgamma = hghgez[j] * 2 * Q * n0 / (eps0 * k_seed) * Ldrift / me_eV;
-        hghgez[j] += Bh * sin(double(nh) * k_seed * s_now) / double(nh);
+        hghgez[j] = dgamma;
     }
     /*
      data_space = fid[f'{sliceID}/theta'][()] * slicelength / (2 * np.pi)
