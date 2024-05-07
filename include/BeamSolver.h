@@ -24,7 +24,7 @@ class BeamSolver {
 public:
     BeamSolver();
     virtual ~BeamSolver();
-    void initEField(double rmax, int ngrid, int nz, int nphi, double lambda, bool longr);
+    void initEField(double rmax, int ngrid, int nz, int nphi, double lambda, bool longr, bool hghgrange, int maxharm);
     void advance(double, Beam *, vector<Field *> *, Undulator *);
     void track(double, Beam *, Undulator *, bool);
     void applyR56(Beam *, Undulator *, double);
