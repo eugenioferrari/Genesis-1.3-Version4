@@ -21,6 +21,7 @@ bool EField::init(int rank, map<string,string> *arg,  Beam *beam, Setup *setup)
 
     double lambda=setup->getReferenceLength();
     bool longrange=false;
+    bool hghgrange = false;
 
     auto end=arg->end();
 
@@ -29,13 +30,15 @@ bool EField::init(int rank, map<string,string> *arg,  Beam *beam, Setup *setup)
     if (arg->find("nz")!=end)    {nz    = strtol(arg->at("nz").c_str(), nullptr,10);  arg->erase(arg->find("nz"));}
     if (arg->find("nphi")!=end)  {nphi  = strtol(arg->at("nphi").c_str(),nullptr,10);  arg->erase(arg->find("nphi"));}
     if (arg->find("longrange")!=end)  {longrange = atob(arg->at("longrange").c_str()); arg->erase(arg->find("longrange"));}
+    if (arg->find("hghgrange")!=end)  {longrange = atob(arg->at("hghgrange").c_str()); arg->erase(arg->find("hghgrange"));}
+    if (arg->find("maxharm")!=end)  {maxharm  = strtol(arg->at("maxharm").c_str(),nullptr,10);  arg->erase(arg->find("maxharm"));}
 
     if (!arg->empty()){
         if (rank==0){ cout << "*** Error: Unknown elements in &efield" << endl; this->usage();}
         return false;
     }
 
-    beam->initEField(rmax,ngrid,nz,nphi,lambda,longrange);
+    beam->initEField(rmax, ngrid, nz, nphi, lambda, longrange, hghgrange, maxharm);
     return true;
 }
  

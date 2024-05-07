@@ -13,6 +13,8 @@ EFieldSolver::EFieldSolver() {
     ycen = 0;
     dr = 1;
     longrange = false;
+    hghgrange = false;
+    maxharm = 0;
     fcurrent.clear();
     fsize.clear();
     efield.clear();
@@ -25,7 +27,7 @@ EFieldSolver::EFieldSolver() {
 
 EFieldSolver::~EFieldSolver()= default;
 
-void EFieldSolver::init(double rmax_in, int ngrid_in, int nz_in, int nphi_in, double lambda, bool longr_in) {
+void EFieldSolver::init(double rmax_in, int ngrid_in, int nz_in, int nphi_in, double lambda, bool longr_in, bool hghgrange_in, int maxharm_in) {
 
     rmax = rmax_in;
     ngrid = ngrid_in;
@@ -33,6 +35,8 @@ void EFieldSolver::init(double rmax_in, int ngrid_in, int nz_in, int nphi_in, do
     nphi = nphi_in;
     ks = 4 * asin(1) / lambda;
     longrange = longr_in;
+    hghgrange = hghgrange_in;
+    maxHarm = maxharm_in;
 
     // adjust working arrays
     if (ngrid != csrc.size()) {
@@ -300,7 +304,7 @@ void EFieldSolver::shortRange(vector<Particle> *beam, double current, double gz2
 }
 
 
-void EFieldSolver::hghgRange(vector<Particle> *beam, double current, double slicelength, double slicespacing, int maxHarm, double Ldrift) {
+void EFieldSolver::hghgRange(vector<Particle> *beam, double current, double slicelength, double slicespacing, double Ldrift) {
 
     auto npart = beam->size();
     if (npart > hghgez.size()){
@@ -345,7 +349,7 @@ void EFieldSolver::hghgRange(vector<Particle> *beam, double current, double slic
     double t_phase = bunching_phase * slicespacing / (2 * pi);
 
     double Bh = 0;
-    //
+
     for (int nh = 1; nh <= maxHarm; ++nh) {
         bunching = 0;
         for (int j = 0; j < npart; ++j) {
@@ -365,19 +369,6 @@ void EFieldSolver::hghgRange(vector<Particle> *beam, double current, double slic
         dgamma = hghgez[j] * 2 * Q * n0 / (eps0 * k_seed) * Ldrift / me_eV;
         hghgez[j] = dgamma;
     }
-    /*
-     data_space = fid[f'{sliceID}/theta'][()] * slicelength / (2 * np.pi)
-
-        # Correction for the phase of the current spike
-
-
-    campo = 0
-    for NH in range(1, maxHarm):
-        Bh = np.abs((np.exp(1j * k_seed * data_space * NH)).sum()) / npart
-        campo = campo + Bh * np.sin(NH * k_seed * data_space) / NH
-
-    dgamma = campo * 2 * Q * n0 / (eps0 * k_seed) * Ldrift / me_eV
-     */
 }
 
 void EFieldSolver::tridiag(){

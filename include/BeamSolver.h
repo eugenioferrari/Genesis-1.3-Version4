@@ -57,8 +57,8 @@ inline double BeamSolver::getSCField(int islice){
     return efield.getSCField(islice);
 }
 
-inline void BeamSolver::initEField(double rmax, int ngrid, int nz, int nphi, double lambda, bool longr){
-    efield.init(rmax,ngrid,nz,nphi,lambda,longr);
+inline void BeamSolver::initEField(double rmax, int ngrid, int nz, int nphi, double lambda, bool longr, bool hghgrange, int maxharm){
+    efield.init(rmax, ngrid, nz, nphi, lambda, longr, hghgrange, maxharm);
 }
 
 

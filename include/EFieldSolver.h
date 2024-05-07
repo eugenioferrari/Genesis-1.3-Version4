@@ -49,9 +49,11 @@ private:
     vector<double> hghgez;
 
     int nz, nphi, ngrid, rank;
+    int maxharm;
     double rmax, ks, xcen, ycen, dr;
     double sigmax, sigmay;
     bool longrange;
+    bool hghgrange;
 
 };
 
@@ -64,7 +66,7 @@ inline bool EFieldSolver::hasShortRange() const{
 }
 
 inline bool EFieldSolver::hasHGHGRange() const{
-    return nz>0;
+    return (maxharm > 0) & hghgrange;
 }
 
 #endif

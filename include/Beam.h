@@ -102,8 +102,8 @@ inline void Beam::initIncoherent(int base, int rank, bool spread, bool loss){
     incoherent.init(base,rank,spread,loss);
 }
 
-inline void Beam::initEField(double rmax, int ngrid, int nz, int nphi, double lambda, bool lngr){
-    solver.initEField(rmax,ngrid,nz,nphi,lambda,lngr);
+inline void Beam::initEField(double rmax, int ngrid, int nz, int nphi, double lambda, bool lngr, bool hghgrange, int maxharm){
+    solver.initEField(rmax, ngrid, nz, nphi, lambda, lngr, hghgrange, maxharm);
 }
 
 inline void Beam::initWake(unsigned int ns, unsigned int nsNode, double ds, double *wakeext, double *wakeres, double *wakegeo,double *wakerou, double ztrans, double radius, bool transient){

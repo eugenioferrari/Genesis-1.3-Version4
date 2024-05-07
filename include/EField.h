@@ -18,16 +18,17 @@ using namespace std;
 
 
 class EField: public StringProcessing{
- public:
-   EField();
-   virtual ~EField();
-   bool init(int,map<string,string> *, Beam *, Setup *);
+public:
+    EField();
+    virtual ~EField();
+    bool init(int,map<string,string> *, Beam *, Setup *);
 
 
- private:
-   static void usage();
-   double rmax{0};
-   long nz{0},nphi{0},ngrid{100};
+private:
+    static void usage();
+    double rmax{0};
+    long nz{0},nphi{0},ngrid{100};
+    long maxharm{0};
 };
 
 #endif

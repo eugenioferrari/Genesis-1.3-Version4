@@ -52,7 +52,7 @@ void BeamSolver::advance(double delz, Beam *beam, vector< Field *> *field, Undul
         efield.shortRange(&beam->beam.at(is), beam->current.at(is), gammaz2, is);
         // Calculate the LSC due to HGHG
         cout << "hghg space charge with current=" << beam->current.at(is) << "A. Slicelength = " << field->at(is)->slicelength << " slicespacing="<< field->at(is)->xlambda << "and LDRIFT=" << und->steplength() * 1e3 << endl;
-        efield.hghgRange(&beam->beam.at(is), beam->current.at(is), field->at(is)->slicelength, field->at(is)->xlambda, 21, und->steplength() * 1e3);
+        efield.hghgRange(&beam->beam.at(is), beam->current.at(is), field->at(is)->slicelength, field->at(is)->xlambda, und->steplength() * 1e3);
 
         for (int ip = 0; ip < beam->beam.at(is).size(); ip++) {
             gamma = beam->beam.at(is).at(ip).gamma;
