@@ -32,7 +32,6 @@ public:
     bool hasHGHGRange() const;
     void allocateForOutput(unsigned long nslice);
     double getSCField(int);
-    double getHGHGLSC(unsigned long i);
 
 private:
     void analyseBeam(vector<Particle> *beam);
