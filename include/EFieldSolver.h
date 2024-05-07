@@ -28,6 +28,7 @@ public:
     void hghgRange(vector<Particle> *, double, double, double, double);
     void longRange(Beam *beam, double gamma, double aw);
     double getEField(unsigned long i);
+    double getHGHGLSC(unsigned long i);
     bool hasShortRange() const;
     bool hasHGHGRange() const;
     void allocateForOutput(unsigned long nslice);
