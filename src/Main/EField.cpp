@@ -20,7 +20,7 @@ bool EField::init(int rank, map<string,string> *arg,  Beam *beam, Setup *setup)
 {
 
     double lambda=setup->getReferenceLength();
-    bool longrange=false;
+    bool longrange = false;
     bool hghgrange = false;
 
     auto end=arg->end();
