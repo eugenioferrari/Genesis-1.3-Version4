@@ -22,7 +22,7 @@ public:
     virtual ~Beam();
     void init(int, int, double,double, double,bool);
     void initSorting(int,int,bool,bool);
-    void initEField(double,int,int,int,double,bool);
+    void initEField(double,int,int,int,double,bool, bool, int);
     void initIncoherent(int, int, bool,bool);
     void initWake(unsigned int, unsigned int, double, double *, double *, double *,double *, double,double, bool);
     void checkBeforeTracking();
