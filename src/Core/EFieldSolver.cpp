@@ -36,7 +36,7 @@ void EFieldSolver::init(double rmax_in, int ngrid_in, int nz_in, int nphi_in, do
     ks = 4 * asin(1) / lambda;
     longrange = longr_in;
     hghgrange = hghgrange_in;
-    maxHarm = maxharm_in;
+    maxharm = maxharm_in;
 
     // adjust working arrays
     if (ngrid != csrc.size()) {
@@ -350,7 +350,7 @@ void EFieldSolver::hghgRange(vector<Particle> *beam, double current, double slic
 
     double Bh = 0;
 
-    for (int nh = 1; nh <= maxHarm; ++nh) {
+    for (int nh = 1; nh <= maxharm; ++nh) {
         bunching = 0;
         for (int j = 0; j < npart; ++j) {
             s_now = beam->at(j).theta * slicelength / (2 * pi) - t_phase;
