@@ -322,7 +322,7 @@ void EFieldSolver::hghgRange(vector<Particle> *beam, double current, double slic
     auto eps0 = 8.854187817620389e-12; // electric permittivity in vacuum (electric constant)
     auto me_eV = 510998.95; //  # mass of electron in eV
     auto pi = 2 * asin(1);
-    auto n0 = (current / c) / (Q * pi * sigma_x * sigma_y);
+    auto n0 = (current / c) / (Q * pi * sigmax * sigmay);
     auto lambda_seed = slicespacing;
     auto k_seed = 2 * pi / lambda_seed;
 
