@@ -23,7 +23,7 @@ class EFieldSolver {
 public:
     EFieldSolver();
     virtual ~EFieldSolver();
-    void init(double, int, int, int, double, bool);
+    void init(double, int, int, int, double, bool, bool, int);
     void shortRange(vector<Particle> *, double, double, int);
     void hghgRange(vector<Particle> *, double, double, double, int, double);
     void longRange(Beam *beam, double gamma, double aw);
