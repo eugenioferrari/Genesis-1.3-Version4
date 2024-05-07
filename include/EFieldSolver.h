@@ -66,7 +66,7 @@ inline bool EFieldSolver::hasShortRange() const{
 }
 
 inline bool EFieldSolver::hasHGHGRange() const{
-    return (maxharm > 0) & hghgrange;
+    return (maxharm > 0);
 }
 
 #endif
