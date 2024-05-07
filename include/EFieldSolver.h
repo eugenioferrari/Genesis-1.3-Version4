@@ -25,7 +25,7 @@ public:
     virtual ~EFieldSolver();
     void init(double, int, int, int, double, bool, bool, int);
     void shortRange(vector<Particle> *, double, double, int);
-    void hghgRange(vector<Particle> *, double, double, double, int, double);
+    void hghgRange(vector<Particle> *, double, double, double, double);
     void longRange(Beam *beam, double gamma, double aw);
     double getEField(unsigned long i);
     bool hasShortRange() const;
