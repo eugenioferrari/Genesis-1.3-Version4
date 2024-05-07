@@ -29,6 +29,7 @@ public:
     void longRange(Beam *beam, double gamma, double aw);
     double getEField(unsigned long i);
     bool hasShortRange() const;
+    bool hasHGHGRange() const;
     void allocateForOutput(unsigned long nslice);
     double getSCField(int);
     double getHGHGLSC(unsigned long i);
