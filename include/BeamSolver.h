@@ -40,6 +40,7 @@ private:
     double xks{}, xku{};
 
     double theta{}, gamma{}, btpar{};
+    double dgamma{};
     double k2gg{}, k2pp{}, k3gg{}, k3pp{};
 
     bool onlyFundamental;

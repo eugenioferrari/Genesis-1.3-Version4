@@ -48,7 +48,11 @@ void BeamSolver::advance(double delz, Beam *beam, vector< Field *> *field, Undul
     for (int is = 0; is < beam->beam.size(); is++) {
         // accumulate space charge field
         double eloss = -beam->longESC[is] / 511000; // convert eV to units of electron rest mass
+        // Calculate the short range space charge field.
         efield.shortRange(&beam->beam.at(is), beam->current.at(is), gammaz2, is);
+        // Calculate the LSC due to HGHG
+        efield.hghgRange(&beam->beam.at(is), beam->current.at(is), field->at(is)->slicelength, field->at(is)->xlambda, 21, und->dz);
+
         for (int ip = 0; ip < beam->beam.at(is).size(); ip++) {
             gamma = beam->beam.at(is).at(ip).gamma;
             theta = beam->beam.at(is).at(ip).theta + autophase; // add autophase here
@@ -79,8 +83,9 @@ void BeamSolver::advance(double delz, Beam *beam, vector< Field *> *field, Undul
                 }
             }
             this->RungeKutta(delz);
-
-            beam->beam.at(is).at(ip).gamma = gamma;
+            // Add the space charge field coming from the current spikes of hghg
+            dgamma = efield.getHGHGLSC(ip);
+            beam->beam.at(is).at(ip).gamma = gamma + dgamma;
             beam->beam.at(is).at(ip).theta = theta;
         }
     }

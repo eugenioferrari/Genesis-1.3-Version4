@@ -16,6 +16,7 @@ EFieldSolver::EFieldSolver() {
     fcurrent.clear();
     fsize.clear();
     efield.clear();
+    hghgez.clear();
     rank=0;
     if (!MPISingle){
         MPI_Comm_rank(MPI_COMM_WORLD, &rank); // assign rank to node
@@ -169,6 +170,46 @@ void EFieldSolver::analyseBeam(vector<Particle> *beam){
     }
 }
 
+
+void EFieldSolver::analyseBeamHGHG(vector<Particle> *beam){
+/*
+ *  calculates the center of the beam slice and its extension (5 times rms radius to construct the space charge grid
+ */
+    auto npart = beam->size();
+
+    if (npart <1) {return;}
+
+    // allocate new working space
+    if (npart> cwork.size()) {
+        cwork.resize(npart);
+        idxr.resize(npart);
+    }
+
+    // calculate center of beam slice
+    xcen = 0;
+    ycen = 0;
+
+    for (int i = 0; i < npart; i++) {
+        xcen += beam->at(i).x;
+        ycen += beam->at(i).y;
+    }
+    xcen /= static_cast<double>(npart);
+    ycen /= static_cast<double>(npart);
+
+    // calculate radial extension of particle distribution
+    //   d
+    double radx2 = 0;
+    double rady2 = 0;
+    for (int i = 0; i < npart; i++) {
+        double tx = beam->at(i).x - xcen;
+        double ty = beam->at(i).y - ycen;
+        radx2 += tx * tx;
+        rady2 += ty * ty;
+    }
+    sigmax = sqrt(radx2);
+    sigmay = sqrt(rady2);
+}
+
 void EFieldSolver::constructLaplaceOperator(){
 
     // r_j are the center grid points. The boundaries are given +/-dr/2. Thus r_j=(j+1/2)*dr
@@ -188,6 +229,11 @@ void EFieldSolver::constructLaplaceOperator(){
 double EFieldSolver::getEField(unsigned long i)
 {
     return ez[i];
+}
+
+double EFieldSolver::getHGHGLSC(unsigned long i)
+{
+    return hghgez[i];
 }
 
 void EFieldSolver::shortRange(vector<Particle> *beam, double current, double gz2, int islice) {
@@ -251,6 +297,87 @@ void EFieldSolver::shortRange(vector<Particle> *beam, double current, double gz2
             }
         }
     }
+}
+
+
+void EFieldSolver::hghgRange(vector<Particle> *beam, double current, double slicelength, double slicespacing, int maxHarm, double Ldrift) {
+
+    auto npart = beam->size();
+    if (npart > hghgez.size()){
+        hghgez.resize(npart);
+    }
+    for (int i =0; i < npart; i++){
+        hghgez[i] = 0;
+    }
+
+    if (!this->hasHGHGRange()) { return; }
+    // calculate center of beam slice and its extension
+    this->analyseBeamHGHG(beam);
+    // sigmax, sigmay are now updated
+    if (npart == 0) { return; }
+
+    // calculate the particle density in the slice
+    auto c = 299792458.0; // velocity of light in m/s
+    auto Q = 1.602176634e-19; // elementary charge in Coulomb
+    auto eps0 = 8.854187817620389e-12; // electric permittivity in vacuum (electric constant)
+    auto me_eV = 510998.95; //  # mass of electron in eV
+    auto pi = 2 * asin(1);
+    auto n0 = (current / c) / (Q * pi * sigma_x * sigma_y);
+    auto lambda_seed = slicespacing;
+    auto k_seed = 2 * pi / lambda_seed;
+
+    // Correction for the phase of the current spike
+    // compute the bunching at the fundamental
+    complex<double> bunching = 0;
+    const   complex<double> i(0.0,1.0);
+    //
+    // bunching = np.sum(np.exp(1j * k_seed * data_space * 1)) / npart
+    // bunching_phase = np.angle(bunching)
+    // t_phase = bunching_phase * slicespacing / (2 * np.pi)
+    // data_space -= t_phase
+    double s_now;
+    for (int j = 0; j < npart; ++j) {
+        s_now = beam->at(j).theta * slicelength / (2 * pi);
+        bunching += exp(i * k_seed * s_now * 1)
+    }
+    bunching /= npart;
+    double bunching_phase = arg(bunching);
+    double t_phase = bunching_phase * slicespacing / (2 * pi);
+
+    double Bh = 0;
+    //
+    for (int nh = 1; nh <= maxHarm; ++nh) {
+        bunching = 0;
+        for (int j = 0; j < npart; ++j) {
+            s_now = beam->at(j).theta * slicelength / (2 * pi) - t_phase;
+            bunching += exp(i * k_seed * s_now * nh);
+        }
+        Bh = abs(bunching) / part;
+        for (int j = 0; j < npart; ++j) {
+            s_now = beam->at(j).theta * slicelength / (2 * pi) - t_phase;
+            hghgez[j] += Bh * sin(nh * k_seed * s_now) / nh;
+        }
+    }
+    // finally convert to deltagamma
+    // dgamma = campo * 2 * Q * n0 / (eps0 * k_seed) * Ldrift / me_eV
+    double dgamma = 0;
+    for (int j = 0; j < npart; ++j) {
+        dgamma = hghgez[j] * 2 * Q * n0 / (eps0 * k_seed) * Ldrift / me_eV;
+        hghgez[j] += Bh * sin(nh * k_seed * s_now) / nh;
+    }
+    /*
+     data_space = fid[f'{sliceID}/theta'][()] * slicelength / (2 * np.pi)
+
+        # Correction for the phase of the current spike
+
+
+    campo = 0
+    for NH in range(1, maxHarm):
+        Bh = np.abs((np.exp(1j * k_seed * data_space * NH)).sum()) / npart
+        campo = campo + Bh * np.sin(NH * k_seed * data_space) / NH
+
+    dgamma = campo * 2 * Q * n0 / (eps0 * k_seed) * Ldrift / me_eV
+     */
 }
 
 void EFieldSolver::tridiag(){

@@ -25,14 +25,17 @@ public:
     virtual ~EFieldSolver();
     void init(double, int, int, int, double, bool);
     void shortRange(vector<Particle> *, double, double, int);
+    void hghgRange(vector<Particle> *, double, double, double, int, double);
     void longRange(Beam *beam, double gamma, double aw);
     double getEField(unsigned long i);
     bool hasShortRange() const;
     void allocateForOutput(unsigned long nslice);
     double getSCField(int);
+    double getHGHGLSC(unsigned long i);
 
 private:
     void analyseBeam(vector<Particle> *beam);
+    void analyseBeamHGHG(vector<Particle> *beam);
     void constructLaplaceOperator();
     void tridiag();
 
@@ -42,9 +45,11 @@ private:
     vector<double> lmid, rlog, vol, ldig;
     vector<complex<double> > csrc, clow, cmid, cupp, celm, gam; // used for tridiag routine
     vector<double> ez,efield;
+    vector<double> hghgez;
 
     int nz, nphi, ngrid, rank;
     double rmax, ks, xcen, ycen, dr;
+    double sigmax, sigmay;
     bool longrange;
 
 };
@@ -55,6 +60,10 @@ inline double EFieldSolver::getSCField(int islice) {
 
 inline bool EFieldSolver::hasShortRange() const{
     return (nz>0) & (ngrid > 2);
+}
+
+inline bool EFieldSolver::hasHGHGRange() const{
+    return nz>0;
 }
 
 #endif
