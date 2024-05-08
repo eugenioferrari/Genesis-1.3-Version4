@@ -51,9 +51,9 @@ void BeamSolver::advance(double delz, Beam *beam, vector< Field *> *field, Undul
         // Calculate the short range space charge field.
         efield.shortRange(&beam->beam.at(is), beam->current.at(is), gammaz2, is);
         // Calculate the LSC due to HGHG
-        cout << "hghg space charge with current=" << beam->current.at(is) << "A. Slicelength = " << field->at(is)->slicelength << " slicespacing="<< field->at(is)->xlambda << "and LDRIFT=" << und->steplength() * 1e3 << endl;
-        efield.hghgRange(&beam->beam.at(is), beam->current.at(is), field->at(is)->slicelength, field->at(is)->xlambda, und->steplength() * 1e3);
-
+        cout << "hghg space charge with current=" << beam->current.at(is) << "A. Slicelength = " << field->at(is)->slicelength << " slicespacing="<< field->at(is)->xlambda << "and LDRIFT=" << delz * 1e3 << endl;
+        efield.hghgRange(&beam->beam.at(is), beam->current.at(is), field->at(is)->slicelength, field->at(is)->xlambda, delz * 1e3);
+        cout << "Survived till here" << endl;
         for (int ip = 0; ip < beam->beam.at(is).size(); ip++) {
             gamma = beam->beam.at(is).at(ip).gamma;
             theta = beam->beam.at(is).at(ip).theta + autophase; // add autophase here
@@ -86,6 +86,7 @@ void BeamSolver::advance(double delz, Beam *beam, vector< Field *> *field, Undul
             this->RungeKutta(delz);
             // Add the space charge field coming from the current spikes of hghg
             dgamma = efield.getHGHGLSC(ip);
+            cout << "Got dgamma" << endl;
             beam->beam.at(is).at(ip).gamma = gamma + dgamma;
             beam->beam.at(is).at(ip).theta = theta;
         }
