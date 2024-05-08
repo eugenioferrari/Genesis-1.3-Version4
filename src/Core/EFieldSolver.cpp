@@ -316,9 +316,9 @@ void EFieldSolver::hghgRange(vector<Particle> *beam, double current, double slic
 
     if (!this->hasHGHGRange()) { return; }
     // calculate center of beam slice and its extension
-    cout << "Analysis" << endl;
+    // cout << "Analysis" << endl;
     this->analyseBeamHGHG(beam);
-    cout << "Analysis done" << endl;
+    // cout << "Analysis done" << endl;
     // sigmax, sigmay are now updated
     if (npart == 0) { return; }
 
