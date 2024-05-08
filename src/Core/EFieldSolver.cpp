@@ -344,16 +344,16 @@ void EFieldSolver::hghgRange(vector<Particle> *beam, double current, double slic
     double bunching_phase = arg(bunching);
     double t_phase = bunching_phase * slicespacing / (2 * pi);
 
-    double Bh;
+    // double Bh;
 
     for (int nh = 1; nh <= maxharm; nh++) {
-        bunching = 0;
+        double Bh = 0;
         for (int ip = 0; ip < npart; ip++) {
             s_now = beam->at(ip).theta * slicelength / (2 * pi) - t_phase;
-            bunching += exp(img * k_seed * s_now * static_cast<double>(nh));
+            Bh += abs(exp(img * k_seed * s_now * static_cast<double>(nh)));
         }
-        bunching /= static_cast<double>(npart);
-        Bh = abs(bunching);
+        Bh /= static_cast<double>(npart);
+        // Bh = abs(bunching);
         cout << "h=" << nh << " b=" << Bh << endl;
         for (int ip = 0; ip < npart; ip++) {
             s_now = beam->at(ip).theta * slicelength / (2 * pi) - t_phase;
