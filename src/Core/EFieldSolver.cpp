@@ -310,8 +310,8 @@ void EFieldSolver::hghgRange(vector<Particle> *beam, double current, double slic
     if (npart > hghgez.size()){
         hghgez.resize(npart);
     }
-    for (int i =0; i < npart; i++){
-        hghgez[i] = 0;
+    for (int ip = 0; ip < npart; ip++){
+        hghgez[ip] = 0;
     }
 
     if (!this->hasHGHGRange()) { return; }
