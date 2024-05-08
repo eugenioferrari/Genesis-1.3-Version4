@@ -316,7 +316,9 @@ void EFieldSolver::hghgRange(vector<Particle> *beam, double current, double slic
 
     if (!this->hasHGHGRange()) { return; }
     // calculate center of beam slice and its extension
+    cout << "Analysis" << endl;
     this->analyseBeamHGHG(beam);
+    cout << "Analysis done" << endl;
     // sigmax, sigmay are now updated
     if (npart == 0) { return; }
 
@@ -333,16 +335,16 @@ void EFieldSolver::hghgRange(vector<Particle> *beam, double current, double slic
     // Correction for the phase of the current spike
     // compute the bunching at the fundamental
     complex<double> bunching = 0;
-    const   complex<double> i(0.0,1.0);
+    const   complex<double> img(0.0,1.0);
     //
     // bunching = np.sum(np.exp(1j * k_seed * data_space * 1)) / npart
     // bunching_phase = np.angle(bunching)
     // t_phase = bunching_phase * slicespacing / (2 * np.pi)
     // data_space -= t_phase
     double s_now;
-    for (int j = 0; j < npart; ++j) {
-        s_now = beam->at(j).theta * slicelength / (2 * pi);
-        bunching += exp(i * k_seed * s_now * double(1));
+    for (int ip = 0; ip < npart; ip++) {
+        s_now = beam->at(ip).theta * slicelength / (2 * pi);
+        bunching += exp(img * k_seed * s_now * double(1));
     }
     bunching /= double(npart);
     double bunching_phase = arg(bunching);
@@ -350,16 +352,16 @@ void EFieldSolver::hghgRange(vector<Particle> *beam, double current, double slic
 
     double Bh = 0;
 
-    for (int nh = 1; nh <= maxharm; ++nh) {
+    for (int nh = 1; nh <= maxharm; nh++) {
         bunching = 0;
-        for (int j = 0; j < npart; ++j) {
+        for (int ip = 0; ip < npart; ++ip) {
             s_now = beam->at(j).theta * slicelength / (2 * pi) - t_phase;
-            bunching += exp(i * k_seed * s_now * double(nh));
+            bunching += exp(img * k_seed * s_now * double(nh));
         }
         Bh = abs(bunching) / double(npart);
-        for (int j = 0; j < npart; ++j) {
-            s_now = beam->at(j).theta * slicelength / (2 * pi) - t_phase;
-            hghgez[j] += Bh * sin(double(nh) * k_seed * s_now) / double(nh);
+        for (int ip = 0; ip < npart; ip++) {
+            s_now = beam->at(ip).theta * slicelength / (2 * pi) - t_phase;
+            hghgez[ip] += Bh * sin(double(nh) * k_seed * s_now) / double(nh);
         }
     }
     // finally convert to deltagamma
