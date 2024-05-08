@@ -354,7 +354,7 @@ void EFieldSolver::hghgRange(vector<Particle> *beam, double current, double slic
         }
         bunching /= static_cast<double>(npart);
         Bh = abs(bunching);
-        //cout << "h=" << nh << " b=" << Bh << endl;
+        cout << "h=" << nh << " b=" << Bh << endl;
         for (int ip = 0; ip < npart; ip++) {
             s_now = beam->at(ip).theta * slicelength / (2 * pi) - t_phase;
             hghgez[ip] += Bh * sin(static_cast<double>(nh) * k_seed * s_now) / static_cast<double>(nh);
@@ -367,6 +367,7 @@ void EFieldSolver::hghgRange(vector<Particle> *beam, double current, double slic
     for (int ip = 0; ip < npart; ip++) {
         dgamma = hghgez[ip] * 2 * Q * n0 / (eps0 * k_seed) * Ldrift / me_eV;
         hghgez[ip] = dgamma;
+        cout << "ip=" << ip << " dgamma=" << dgamma << endl;
         sanity += dgamma;
     }
     //cout << "Sanity check =" << sanity << endl;
