@@ -183,12 +183,6 @@ void EFieldSolver::analyseBeamHGHG(vector<Particle> *beam){
 
     if (npart <1) {return;}
 
-    // allocate new working space
-    if (npart> cwork.size()) {
-        cwork.resize(npart);
-        idxr.resize(npart);
-    }
-
     // calculate center of beam slice
     xcen = 0;
     ycen = 0;
@@ -344,9 +338,9 @@ void EFieldSolver::hghgRange(vector<Particle> *beam, double current, double slic
     double s_now;
     for (int ip = 0; ip < npart; ip++) {
         s_now = beam->at(ip).theta * slicelength / (2 * pi);
-        bunching += exp(img * k_seed * s_now * double(1));
+        bunching += exp(img * k_seed * s_now * static_cast<double>(1));
     }
-    bunching /= double(npart);
+    bunching /= static_cast<double>(npart);
     double bunching_phase = arg(bunching);
     double t_phase = bunching_phase * slicespacing / (2 * pi);
 
@@ -356,20 +350,21 @@ void EFieldSolver::hghgRange(vector<Particle> *beam, double current, double slic
         bunching = 0;
         for (int ip = 0; ip < npart; ++ip) {
             s_now = beam->at(ip).theta * slicelength / (2 * pi) - t_phase;
-            bunching += exp(img * k_seed * s_now * double(nh));
+            bunching += exp(img * k_seed * s_now * static_cast<double>(nh));
         }
-        Bh = abs(bunching) / double(npart);
+        bunching /= static_cast<double>(npart);
+        Bh = abs(bunching)
         for (int ip = 0; ip < npart; ip++) {
             s_now = beam->at(ip).theta * slicelength / (2 * pi) - t_phase;
-            hghgez[ip] += Bh * sin(double(nh) * k_seed * s_now) / double(nh);
+            hghgez[ip] += Bh * sin(static_cast<double>(nh) * k_seed * s_now) / static_cast<double>(nh);
         }
     }
-    // finally convert to deltagamma
+    // finally convert to dgamma
     // dgamma = campo * 2 * Q * n0 / (eps0 * k_seed) * Ldrift / me_eV
     double dgamma = 0;
-    for (int j = 0; j < npart; ++j) {
-        dgamma = hghgez[j] * 2 * Q * n0 / (eps0 * k_seed) * Ldrift / me_eV;
-        hghgez[j] = dgamma;
+    for (int ip = 0; ip < npart; ip++) {
+        dgamma = hghgez[ip] * 2 * Q * n0 / (eps0 * k_seed) * Ldrift / me_eV;
+        hghgez[ip] = dgamma;
     }
 }
 
