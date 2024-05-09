@@ -53,7 +53,7 @@ void BeamSolver::advance(double delz, Beam *beam, vector< Field *> *field, Undul
         // Calculate the LSC due to HGHG
         // cout << "ISLICE=" << is << endl;
         // cout << "hghg space charge with current=" << beam->current.at(is) << "A. Slicelength = " << beam->slicelength << " slicespacing="<< beam->reflength << " and LDRIFT=" << delz << endl;
-        efield.hghgRange(&beam->beam.at(is), beam->current.at(is), beam->slicelength, beam->reflength, delz);
+        efield.hghgRange(&beam->beam.at(is), beam->current.at(is), beam->reflength, beam->slicelength, delz);
         // cout << "npart " << beam->beam.at(is).size() << endl;
         for (int ip = 0; ip < beam->beam.at(is).size(); ip++) {
             gamma = beam->beam.at(is).at(ip).gamma;
