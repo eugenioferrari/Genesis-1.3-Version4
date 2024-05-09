@@ -204,6 +204,9 @@ void EFieldSolver::analyseBeamHGHG(vector<Particle> *beam){
         radx2 += tx * tx;
         rady2 += ty * ty;
     }
+    radx2 /= static_cast<double>(npart);
+    rady2 /= static_cast<double>(npart);
+
     sigmax = sqrt(radx2);
     sigmay = sqrt(rady2);
 }
