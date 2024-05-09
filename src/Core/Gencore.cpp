@@ -105,7 +105,7 @@ bool Gencore::run(Beam *beam, vector<Field*> *field, Setup *setup, Undulator *un
 
         // ----------------------------------------
         // step 1 - apply most marker action  (always at beginning of a step)
-        if (rank==0) { cout << "Marker in loop..."  << endl; }
+        // if (rank==0) { cout << "Marker in loop..."  << endl; }
         bool error_IO=false;
         bool sort=control->applyMarker(beam, field, und, error_IO);
         if(error_IO) {
@@ -142,7 +142,7 @@ bool Gencore::run(Beam *beam, vector<Field*> *field, Setup *setup, Undulator *un
 
         //-----------------------------------------
         // step 5 - Apply slippage
-        if (rank==0) { cout << "Apply slippage in loop..."  << endl; }
+        // if (rank==0) { cout << "Apply slippage in loop..."  << endl; }
         for (int i=0;i<field->size();i++){
             control->applySlippage(und->slippage(), field->at(i));
         }
@@ -162,7 +162,7 @@ bool Gencore::run(Beam *beam, vector<Field*> *field, Setup *setup, Undulator *un
 
     //---------------------------
     // end and clean-up
-    if (rank==0) { cout << "Last marker..."  << endl; }
+    // if (rank==0) { cout << "Last marker..."  << endl; }
     // perform last marker action
     bool error_IO=false;
     bool sort=control->applyMarker(beam, field, und, error_IO);

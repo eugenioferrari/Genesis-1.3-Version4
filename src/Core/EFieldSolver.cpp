@@ -343,11 +343,12 @@ void EFieldSolver::hghgRange(vector<Particle> *beam, double current, double slic
     bunching /= static_cast<double>(npart);
     double bunching_phase = arg(bunching);
     double t_phase = bunching_phase * slicespacing / (2 * pi);
+    /*
     cout << "t_phase=" << t_phase << endl;
     cout << "bunching " << bunching << endl;
     cout << "slicelength" << slicelength << endl;
     cout << "slicespacing" << slicespacing << endl;
-
+    */
     // double Bh;
 
     for (int nh = 1; nh <= maxharm; nh++) {
@@ -359,7 +360,7 @@ void EFieldSolver::hghgRange(vector<Particle> *beam, double current, double slic
         }
         bunching /= static_cast<double>(npart);
         Bh = abs(bunching);
-        cout << "h=" << nh << " b=" << Bh << endl;
+        // cout << "h=" << nh << " b=" << Bh << endl;
         for (int ip = 0; ip < npart; ip++) {
             s_now = beam->at(ip).theta * slicelength / (2 * pi) - t_phase;
             hghgez[ip] += Bh * sin(static_cast<double>(nh) * k_seed * s_now) / static_cast<double>(nh);
@@ -368,12 +369,12 @@ void EFieldSolver::hghgRange(vector<Particle> *beam, double current, double slic
     // finally convert to dgamma
     // dgamma = campo * 2 * Q * n0 / (eps0 * k_seed) * Ldrift / me_eV
     double dgamma;
-    double sanity = 0;
+    // double sanity = 0;
     for (int ip = 0; ip < npart; ip++) {
         dgamma = hghgez[ip] * 2 * Q * n0 / (eps0 * k_seed) * Ldrift / me_eV;
         hghgez[ip] = dgamma;
-        cout << "ip=" << ip << " dgamma=" << dgamma << endl;
-        sanity += dgamma;
+        // cout << "ip=" << ip << " dgamma=" << dgamma << endl;
+        // sanity += dgamma;
     }
     //cout << "Sanity check =" << sanity << endl;
 }
