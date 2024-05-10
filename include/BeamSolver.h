@@ -29,6 +29,7 @@ public:
     void track(double, Beam *, Undulator *, bool);
     void applyR56(Beam *, Undulator *, double);
     double getSCField(int);
+    double getHGHGSCField(int);
     void checkAllocation(unsigned long i);
 
 private:
@@ -55,6 +56,10 @@ private:
 
 inline double BeamSolver::getSCField(int islice){
     return efield.getSCField(islice);
+}
+
+inline double BeamSolver::getHGHGSCField(int islice){
+    return efield.getHGHGSCField(islice);
 }
 
 inline void BeamSolver::initEField(double rmax, int ngrid, int nz, int nphi, double lambda, bool longr, bool hghgrange, int maxharm){

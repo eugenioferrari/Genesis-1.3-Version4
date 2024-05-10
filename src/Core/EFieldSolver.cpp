@@ -19,6 +19,7 @@ EFieldSolver::EFieldSolver() {
     fsize.clear();
     efield.clear();
     hghgez.clear();
+    hghgefield.clear();
     rank=0;
     if (!MPISingle){
         MPI_Comm_rank(MPI_COMM_WORLD, &rank); // assign rank to node
@@ -54,8 +55,9 @@ void EFieldSolver::init(double rmax_in, int ngrid_in, int nz_in, int nphi_in, do
 }
 
 void EFieldSolver::allocateForOutput(unsigned long nslice){
-    if (nslice == efield.size()){ return;}
+    if (nslice == efield.size() & nslice == hghgefield.size()){ return;}
     efield.resize(nslice, 0);
+    hghgefield.resize(nslice, 0);
 }
 
 void EFieldSolver::longRange(Beam *beam, double gamma0, double aw) {
@@ -232,7 +234,7 @@ double EFieldSolver::getEField(unsigned long i)
     return ez[i];
 }
 
-double EFieldSolver::getHGHGLSC(unsigned long i)
+double EFieldSolver::getHGHGdgamma(unsigned long i)
 {
     return hghgez[i];
 }
@@ -301,7 +303,7 @@ void EFieldSolver::shortRange(vector<Particle> *beam, double current, double gz2
 }
 
 
-void EFieldSolver::hghgRange(vector<Particle> *beam, double current, double slicelength, double slicespacing, double Ldrift) {
+void EFieldSolver::hghgRange(vector<Particle> *beam, double current, double slicelength, double slicespacing, double Ldrift, int islice) {
 
     auto npart = beam->size();
     if (npart > hghgez.size()){
@@ -372,13 +374,11 @@ void EFieldSolver::hghgRange(vector<Particle> *beam, double current, double slic
     }
     // finally convert to dgamma
     // dgamma = campo * 2 * Q * n0 / (eps0 * k_seed) * Ldrift / me_eV
-    double dgamma;
-    // double sanity = 0;
+    hghgefield[islice] = 0;  // sanity is the accumulation of all the dgamma over the slice
     for (int ip = 0; ip < npart; ip++) {
-        dgamma = hghgez[ip] * 2 * Q * n0 / (eps0 * k_seed) * Ldrift / me_eV;
-        hghgez[ip] = dgamma;
+        hghgez[ip] = hghgez[ip] * 2 * Q * n0 / (eps0 * k_seed) * Ldrift / me_eV;
         // cout << "ip=" << ip << " dgamma=" << dgamma << endl;
-        // sanity += dgamma;
+        hghgefield[islice] += dgamma;
     }
     //cout << "Sanity check =" << sanity << endl;
 }

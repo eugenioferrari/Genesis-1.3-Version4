@@ -328,6 +328,7 @@ std::map<std::string,OutputInfo> DiagBeam::getTags(FilterDiagnostics & filter_in
         tags["wakefield"] = {false, false, "eV/m"}; // effect from wakefields
         tags["LSCfield"] = {false, false, "eV/m"}; // effect from space charge field
         tags["SSCfield"] = {false, false, "eV/m"}; // effect from space charge field
+        tags["HGHGSCfield"] = {false, false, "Lorentz"}; //Accumulated delta gamma over one slice
         tags["xmin"] = {false, false, "m"};
         tags["xmax"] = {false, false, "m"};
         tags["pxmin"] = {false, false, "rad"};
@@ -483,6 +484,7 @@ void DiagBeam::getValues(Beam *beam,std::map<std::string,std::vector<double> >&v
             this->storeValue(val,"wakefield",idx,beam->eloss[is]);
             this->storeValue(val,"LSCfield",idx,beam->longESC[is]);
             this->storeValue(val,"SSCfield",idx,beam->getSCField(is));
+            this->storeValue(val,"HGHGSCfield",idx,beam->getHGHGSCField(is));
             this->storeValue(val,"xmin",idx,xmin);
             this->storeValue(val,"xmax",idx,xmax);
             this->storeValue(val,"pxmin",idx,pxmin);

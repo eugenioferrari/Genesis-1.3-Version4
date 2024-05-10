@@ -39,6 +39,7 @@ public:
     int  get_WriteFilter_inc();
     bool hasWake();
     double getSCField(int);
+    double getHGHGSCField(int);
     void setBunchingHarmonicOutput(int harm_in);
     int getBunchingHarmonics();
     void set_global_stat(bool);
@@ -112,6 +113,7 @@ inline void Beam::initWake(unsigned int ns, unsigned int nsNode, double ds, doub
 
 inline bool Beam::hasWake(){return col.hasWakeDefined();}
 inline double Beam::getSCField(int islice) {return solver.getSCField(islice);}
+inline double Beam::getHGHGSCField(int islice) {return solver.getHGHGSCField(islice);}
 
 inline void Beam::setBunchingHarmonicOutput(int harm_in){bharm=harm_in;}
 inline int Beam::getBunchingHarmonics(){return bharm;}

@@ -25,14 +25,15 @@ public:
     virtual ~EFieldSolver();
     void init(double, int, int, int, double, bool, bool, int);
     void shortRange(vector<Particle> *, double, double, int);
-    void hghgRange(vector<Particle> *, double, double, double, double);
+    void hghgRange(vector<Particle> *, double, double, double, double, int);
     void longRange(Beam *beam, double gamma, double aw);
     double getEField(unsigned long i);
-    double getHGHGLSC(unsigned long i);
+    double getHGHGdgamma(unsigned long i);
     bool hasShortRange() const;
     bool hasHGHGRange() const;
     void allocateForOutput(unsigned long nslice);
     double getSCField(int);
+    double getHGHGSCField(int);
 
 private:
     void analyseBeam(vector<Particle> *beam);
@@ -46,7 +47,9 @@ private:
     vector<double> lmid, rlog, vol, ldig;
     vector<complex<double> > csrc, clow, cmid, cupp, celm, gam; // used for tridiag routine
     vector<double> ez,efield;
-    vector<double> hghgez;
+    // hghgez contains the dgamma for each particle
+    // hghgefield contains the sum over all dgamma for each slice
+    vector<double> hghgez, hghgefield;
 
     int nz, nphi, ngrid, rank;
     int maxharm;
@@ -59,6 +62,11 @@ private:
 
 inline double EFieldSolver::getSCField(int islice) {
     return efield[islice]*511000;  // convert from Lorentz mass unit to eV /m
+}
+
+inline double EFieldSolver::getHGHGSCField(int islice) {
+    // Returns the hghgefield for the islice
+    return hghgefield[islice];  // in Lorentz for now
 }
 
 inline bool EFieldSolver::hasShortRange() const{
