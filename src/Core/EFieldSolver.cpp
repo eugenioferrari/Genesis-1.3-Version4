@@ -316,6 +316,7 @@ void EFieldSolver::hghgRange(vector<Particle> *beam, double current, double slic
     for (int ip = 0; ip < npart; ip++){
         hghgez[ip] = 0;
     }
+    hghgefield[islice] = 0;
 
     if (!this->hasHGHGRange()) { return; }
     // calculate center of beam slice and its extension
@@ -389,6 +390,7 @@ void EFieldSolver::hghgRange(vector<Particle> *beam, double current, double slic
     }
     hghgefield[islice] = sanity;
     cout << "Sanity check =" << sanity << endl;
+    cout << "Sanity check =" << hghgefield[islice] << endl;
 }
 
 void EFieldSolver::tridiag(){
