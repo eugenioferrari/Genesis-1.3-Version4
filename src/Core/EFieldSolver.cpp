@@ -378,7 +378,7 @@ void EFieldSolver::hghgRange(vector<Particle> *beam, double current, double slic
     for (int ip = 0; ip < npart; ip++) {
         hghgez[ip] = hghgez[ip] * 2 * Q * n0 / (eps0 * k_seed) * Ldrift / me_eV;
         // cout << "ip=" << ip << " dgamma=" << dgamma << endl;
-        hghgefield[islice] += dgamma;
+        hghgefield[islice] += hghgez[ip];
     }
     //cout << "Sanity check =" << sanity << endl;
 }
