@@ -172,5 +172,6 @@ void BeamSolver::ODE(double tgam,double tthet) {
 
 void BeamSolver::checkAllocation(unsigned long nslice) {
     efield.allocateForOutput(nslice);
+    efield.allocateForHGHGOutput(nslice);
 }
 

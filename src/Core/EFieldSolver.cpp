@@ -55,8 +55,12 @@ void EFieldSolver::init(double rmax_in, int ngrid_in, int nz_in, int nphi_in, do
 }
 
 void EFieldSolver::allocateForOutput(unsigned long nslice){
-    if (nslice == efield.size() & nslice == hghgefield.size()){ return;}
+    if (nslice == efield.size()){ return;}
     efield.resize(nslice, 0);
+}
+
+void EFieldSolver::allocateForHGHGOutput(unsigned long nslice){
+    if (nslice == hghgefield.size()){ return;}
     hghgefield.resize(nslice, 0);
 }
 

@@ -32,6 +32,7 @@ public:
     bool hasShortRange() const;
     bool hasHGHGRange() const;
     void allocateForOutput(unsigned long nslice);
+    void allocateForHGHGOutput(unsigned long nslice);
     double getSCField(int);
     double getHGHGSCField(int);
 
