@@ -83,7 +83,6 @@ void Output::writeMetaWorker(Undulator *und, hid_t gid)
     VersionInfo vi;
     hid_t gidsub;
     vector<double> tmp(1,0);
-
     gidsub=H5Gcreate(gid,"Version",H5P_DEFAULT,H5P_DEFAULT,H5P_DEFAULT);
     tmp[0]=vi.Major();
     this->writeSingleNode(gidsub,"Major"," ",&tmp);
@@ -364,7 +363,6 @@ void Output::writeBeamBuffer(Beam *beam)
     if (beam->outputAux()){
         this->writeBuffer(gid, "efield","eV/m", &beam->efld);
     }
-
     this->writeBuffer(gid, "betax","m",&beam->bx);
     this->writeBuffer(gid, "betay","m",&beam->by);
     this->writeBuffer(gid, "alphax","rad",&beam->ax);
