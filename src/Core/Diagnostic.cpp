@@ -484,6 +484,7 @@ void DiagBeam::getValues(Beam *beam,std::map<std::string,std::vector<double> >&v
             this->storeValue(val,"wakefield",idx,beam->eloss[is]);
             this->storeValue(val,"LSCfield",idx,beam->longESC[is]);
             this->storeValue(val,"SSCfield",idx,beam->getSCField(is));
+            cout << "diagnostics. " << beam->getHGHGSCField(is) << endl;
             this->storeValue(val,"HGHGSCfield",idx,beam->getHGHGSCField(is));
             this->storeValue(val,"xmin",idx,xmin);
             this->storeValue(val,"xmax",idx,xmax);
