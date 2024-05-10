@@ -384,7 +384,7 @@ void EFieldSolver::hghgRange(vector<Particle> *beam, double current, double slic
         // cout << "ip=" << ip << " dgamma=" << dgamma << endl;
     }
     hghgefield[islice] = sanity;
-    //cout << "Sanity check =" << sanity << endl;
+    cout << "Sanity check =" << sanity << endl;
 }
 
 void EFieldSolver::tridiag(){
