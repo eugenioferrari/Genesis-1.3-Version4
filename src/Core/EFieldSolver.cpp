@@ -380,17 +380,12 @@ void EFieldSolver::hghgRange(vector<Particle> *beam, double current, double slic
     // finally convert to dgamma
     // dgamma = campo * 2 * Q * n0 / (eps0 * k_seed) * Ldrift / me_eV
     // hghgefield[islice] = 0;  // sanity is the accumulation of all the dgamma over the slice
-    double dgamma;
-    double sanity = 0;
     for (int ip = 0; ip < npart; ip++) {
-        dgamma = hghgez[ip] * 2 * Q * n0 / (eps0 * k_seed) * Ldrift / me_eV;
-        hghgez[ip] = dgamma;
-        sanity += dgamma;
+        hghgez[ip] = hghgez[ip] * 2 * Q * n0 / (eps0 * k_seed) * Ldrift / me_eV;
+        hghgefield[islice] += hghgez[ip];
         // cout << "ip=" << ip << " dgamma=" << dgamma << endl;
     }
-    hghgefield[islice] = sanity;
-    cout << "Sanity check =" << sanity << endl;
-    cout << "Sanity check =" << hghgefield[islice] << endl;
+    // cout << "Sanity check =" << sanity << endl;
 }
 
 void EFieldSolver::tridiag(){
