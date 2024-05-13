@@ -385,6 +385,8 @@ void EFieldSolver::hghgRange(vector<Particle> *beam, double current, double slic
         hghgefield[islice] += hghgez[ip];
         // cout << "ip=" << ip << " dgamma=" << dgamma << endl;
     }
+    // Compute the average
+    hghgefield[islice] /= npart
     // cout << "Sanity check =" << sanity << endl;
 }
 
