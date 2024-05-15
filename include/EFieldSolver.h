@@ -23,7 +23,7 @@ class EFieldSolver {
 public:
     EFieldSolver();
     virtual ~EFieldSolver();
-    void init(double, int, int, int, double, bool, bool, int);
+    void init(double, int, int, int, double, bool, bool, int, double);
     void shortRange(vector<Particle> *, double, double, int);
     // Arguments: slice, current, slicelength, slicespacing, Ldrift, islice
     void hghgRange(vector<Particle> *, double, double, double, double, int);
