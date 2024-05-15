@@ -15,7 +15,7 @@ EFieldSolver::EFieldSolver() {
     longrange = false;
     hghgrange = false;
     maxharm = 0;
-    scaling = 2.;
+    scaling = 2;
     fcurrent.clear();
     fsize.clear();
     efield.clear();
@@ -39,7 +39,11 @@ void EFieldSolver::init(double rmax_in, int ngrid_in, int nz_in, int nphi_in, do
     longrange = longr_in;
     hghgrange = hghgrange_in;
     maxharm = maxharm_in;
-    scaling = scaling_in;
+    if (scaling_in == 0.){
+        scaling = 2.0;
+    } else {
+        scaling = scaling_in;
+    }
 
     // adjust working arrays
     if (ngrid != csrc.size()) {
@@ -320,8 +324,6 @@ void EFieldSolver::hghgRange(vector<Particle> *beam, double current, double slic
     }
     hghgefield[islice] = 0;
 
-    cout << "scaling" << scaling << endl;
-
     if (!this->hasHGHGRange()) { return; }
     // calculate center of beam slice and its extension
     // cout << "Analysis" << endl;
@@ -329,6 +331,8 @@ void EFieldSolver::hghgRange(vector<Particle> *beam, double current, double slic
     // cout << "B done" << endl;
     // sigmax, sigmay are now updated
     if (npart == 0) { return; }
+
+    cout << "scaling " << scaling << endl;
 
     // calculate the particle density in the slice
     auto c = 299792458.0; // velocity of light in m/s
