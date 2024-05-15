@@ -25,6 +25,7 @@ public:
     virtual ~EFieldSolver();
     void init(double, int, int, int, double, bool, bool, int);
     void shortRange(vector<Particle> *, double, double, int);
+    // Arguments: slice, current, slicelength, slicespacing, Ldrift, islice
     void hghgRange(vector<Particle> *, double, double, double, double, int);
     void longRange(Beam *beam, double gamma, double aw);
     double getEField(unsigned long i);
@@ -53,7 +54,8 @@ private:
     vector<double> hghgez, hghgefield;
 
     int nz, nphi, ngrid, rank;
-    int maxharm;
+    int maxharm;  // the maximum harmonic to be considered for computing the field (default = 0)
+    double scaling;  // the scaling factor for the LSC (default = 0)
     double rmax, ks, xcen, ycen, dr;
     double sigmax, sigmay;
     bool longrange;
@@ -71,11 +73,11 @@ inline double EFieldSolver::getHGHGSCField(int islice) {
 }
 
 inline bool EFieldSolver::hasShortRange() const{
-    return (nz>0) & (ngrid > 2);
+    return (nz > 0) & (ngrid > 2);
 }
 
 inline bool EFieldSolver::hasHGHGRange() const{
-    return (maxharm > 0);
+    return (maxharm > 0) & (scaling != 0.);
 }
 
 #endif

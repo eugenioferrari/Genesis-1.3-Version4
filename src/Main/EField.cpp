@@ -32,13 +32,14 @@ bool EField::init(int rank, map<string,string> *arg,  Beam *beam, Setup *setup)
     if (arg->find("longrange")!=end)  {longrange = atob(arg->at("longrange").c_str()); arg->erase(arg->find("longrange"));}
     if (arg->find("hghgrange")!=end)  {hghgrange = atob(arg->at("hghgrange").c_str()); arg->erase(arg->find("hghgrange"));}
     if (arg->find("maxharm")!=end)  {maxharm  = strtol(arg->at("maxharm").c_str(),nullptr,10);  arg->erase(arg->find("maxharm"));}
+    if (arg->find("scaling")!=end)  {scaling  = strtod(arg->at("scaling").c_str(), nullptr); arg->erase(arg->find("scaling"));}
 
     if (!arg->empty()){
         if (rank==0){ cout << "*** Error: Unknown elements in &efield" << endl; this->usage();}
         return false;
     }
 
-    beam->initEField(rmax, ngrid, nz, nphi, lambda, longrange, hghgrange, maxharm);
+    beam->initEField(rmax, ngrid, nz, nphi, lambda, longrange, hghgrange, maxharm, scaling);
     return true;
 }
  

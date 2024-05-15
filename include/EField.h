@@ -27,8 +27,9 @@ public:
 private:
     static void usage();
     double rmax{0};
-    long nz{0},nphi{0},ngrid{100};
+    long nz{0}, nphi{0}, ngrid{100};
     long maxharm{0};
+    double scaling{0};
 };
 
 #endif

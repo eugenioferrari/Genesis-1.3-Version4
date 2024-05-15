@@ -24,7 +24,7 @@ class BeamSolver {
 public:
     BeamSolver();
     virtual ~BeamSolver();
-    void initEField(double rmax, int ngrid, int nz, int nphi, double lambda, bool longr, bool hghgrange, int maxharm);
+    void initEField(double rmax, int ngrid, int nz, int nphi, double lambda, bool longr, bool hghgrange, int maxharm, double scaling);
     void advance(double, Beam *, vector<Field *> *, Undulator *);
     void track(double, Beam *, Undulator *, bool);
     void applyR56(Beam *, Undulator *, double);
@@ -62,8 +62,8 @@ inline double BeamSolver::getHGHGSCField(int islice){
     return efield.getHGHGSCField(islice);
 }
 
-inline void BeamSolver::initEField(double rmax, int ngrid, int nz, int nphi, double lambda, bool longr, bool hghgrange, int maxharm){
-    efield.init(rmax, ngrid, nz, nphi, lambda, longr, hghgrange, maxharm);
+inline void BeamSolver::initEField(double rmax, int ngrid, int nz, int nphi, double lambda, bool longr, bool hghgrange, int maxharm, double scaling){
+    efield.init(rmax, ngrid, nz, nphi, lambda, longr, hghgrange, maxharm, scaling);
 }
 
 

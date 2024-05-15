@@ -15,6 +15,7 @@ EFieldSolver::EFieldSolver() {
     longrange = false;
     hghgrange = false;
     maxharm = 0;
+    scaling = 2.;
     fcurrent.clear();
     fsize.clear();
     efield.clear();
@@ -28,7 +29,7 @@ EFieldSolver::EFieldSolver() {
 
 EFieldSolver::~EFieldSolver()= default;
 
-void EFieldSolver::init(double rmax_in, int ngrid_in, int nz_in, int nphi_in, double lambda, bool longr_in, bool hghgrange_in, int maxharm_in) {
+void EFieldSolver::init(double rmax_in, int ngrid_in, int nz_in, int nphi_in, double lambda, bool longr_in, bool hghgrange_in, int maxharm_in, double scaling_in) {
 
     rmax = rmax_in;
     ngrid = ngrid_in;
@@ -38,6 +39,7 @@ void EFieldSolver::init(double rmax_in, int ngrid_in, int nz_in, int nphi_in, do
     longrange = longr_in;
     hghgrange = hghgrange_in;
     maxharm = maxharm_in;
+    scaling = scaling_in;
 
     // adjust working arrays
     if (ngrid != csrc.size()) {
@@ -332,7 +334,7 @@ void EFieldSolver::hghgRange(vector<Particle> *beam, double current, double slic
     auto eps0 = 8.854187817620389e-12; // electric permittivity in vacuum (electric constant)
     auto me_eV = 510998.95; //  # mass of electron in eV
     auto pi = 2 * asin(1);
-    auto n0 = (current / c) / (Q * pi * sigmax * sigmay);
+    auto n0 = (current / c) / (Q * pi * sigmax * sigmay * scaling);
     auto lambda_seed = slicespacing;
     auto k_seed = 2 * pi / lambda_seed;
 
