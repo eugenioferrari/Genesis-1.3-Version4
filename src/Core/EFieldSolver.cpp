@@ -328,6 +328,8 @@ void EFieldSolver::hghgRange(vector<Particle> *beam, double current, double slic
     // sigmax, sigmay are now updated
     if (npart == 0) { return; }
 
+    cout << "scaling" << scaling << endl;
+
     // calculate the particle density in the slice
     auto c = 299792458.0; // velocity of light in m/s
     auto Q = 1.602176634e-19; // elementary charge in Coulomb
