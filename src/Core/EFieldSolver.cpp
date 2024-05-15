@@ -320,6 +320,8 @@ void EFieldSolver::hghgRange(vector<Particle> *beam, double current, double slic
     }
     hghgefield[islice] = 0;
 
+    cout << "scaling" << scaling << endl;
+
     if (!this->hasHGHGRange()) { return; }
     // calculate center of beam slice and its extension
     // cout << "Analysis" << endl;
@@ -327,8 +329,6 @@ void EFieldSolver::hghgRange(vector<Particle> *beam, double current, double slic
     // cout << "B done" << endl;
     // sigmax, sigmay are now updated
     if (npart == 0) { return; }
-
-    cout << "scaling" << scaling << endl;
 
     // calculate the particle density in the slice
     auto c = 299792458.0; // velocity of light in m/s
