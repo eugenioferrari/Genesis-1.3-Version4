@@ -87,13 +87,16 @@ void BeamSolver::advance(double delz, Beam *beam, vector< Field *> *field, Undul
         // Calculate the LSC (bunching model)
         // cout << "ISLICE=" << is << endl;
         // cout << "hghg space charge with current=" << beam->current.at(is) << "A. Slicelength = " << beam->slicelength << " slicespacing="<< beam->reflength << " and LDRIFT=" << delz << endl;
-        efield.hghgRange(&beam->beam.at(is), beam->current.at(is), beam->reflength, beam->slicelength, delz, is);
-        // cout << "npart " << beam->beam.at(is).size() << endl;
-        for (int ip = 0; ip < beam->beam.at(is).size(); ip++) {
-            // Add the space charge field coming from the current spikes of hghg
-            dgamma = efield.getHGHGdgamma(ip);
-            // cout << "Got dgamma " << ip << endl;
-            beam->beam.at(is).at(ip).gamma += dgamma;
+        // Only go through the loop if needed
+        if (efield.hasHGHGRange()) {
+            efield.hghgRange(&beam->beam.at(is), beam->current.at(is), beam->reflength, beam->slicelength, delz, is);
+            // cout << "npart " << beam->beam.at(is).size() << endl;
+            for (int ip = 0; ip < beam->beam.at(is).size(); ip++) {
+                // Add the space charge field coming from the current spikes of hghg
+                dgamma = efield.getHGHGdgamma(ip);
+                // cout << "Got dgamma " << ip << endl;
+                beam->beam.at(is).at(ip).gamma += dgamma;
+            }
         }
     }
 }
