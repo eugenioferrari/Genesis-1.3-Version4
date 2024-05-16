@@ -56,7 +56,10 @@ void BeamSolver::advance(double delz, Beam *beam, vector< Field *> *field, Undul
         efield.hghgRange(&beam->beam.at(is), beam->current.at(is), beam->reflength, beam->slicelength, delz, is);
         // cout << "npart " << beam->beam.at(is).size() << endl;
         for (int ip = 0; ip < beam->beam.at(is).size(); ip++) {
-            gamma = beam->beam.at(is).at(ip).gamma;
+            // Add the space charge field coming from the current spikes of hghg
+            dgamma = efield.getHGHGdgamma(ip);
+            // cout << "Got dgamma " << ip << endl;
+            gamma = beam->beam.at(is).at(ip).gamma + dgamma;
             theta = beam->beam.at(is).at(ip).theta + autophase; // add autophase here
             double x = beam->beam.at(is).at(ip).x;
             double y = beam->beam.at(is).at(ip).y;
@@ -85,10 +88,8 @@ void BeamSolver::advance(double delz, Beam *beam, vector< Field *> *field, Undul
                 }
             }
             this->RungeKutta(delz);
-            // Add the space charge field coming from the current spikes of hghg
-            dgamma = efield.getHGHGdgamma(ip);
-            // cout << "Got dgamma " << ip << endl;
-            beam->beam.at(is).at(ip).gamma = gamma + dgamma;
+            // Update the beam
+            beam->beam.at(is).at(ip).gamma = gamma;
             beam->beam.at(is).at(ip).theta = theta;
         }
     }
