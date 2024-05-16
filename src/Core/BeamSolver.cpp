@@ -50,16 +50,8 @@ void BeamSolver::advance(double delz, Beam *beam, vector< Field *> *field, Undul
         double eloss = -beam->longESC[is] / 511000; // convert eV to units of electron rest mass
         // Calculate the short range space charge field.
         efield.shortRange(&beam->beam.at(is), beam->current.at(is), gammaz2, is);
-        // Calculate the LSC due to HGHG
-        // cout << "ISLICE=" << is << endl;
-        // cout << "hghg space charge with current=" << beam->current.at(is) << "A. Slicelength = " << beam->slicelength << " slicespacing="<< beam->reflength << " and LDRIFT=" << delz << endl;
-        efield.hghgRange(&beam->beam.at(is), beam->current.at(is), beam->reflength, beam->slicelength, delz, is);
-        // cout << "npart " << beam->beam.at(is).size() << endl;
         for (int ip = 0; ip < beam->beam.at(is).size(); ip++) {
-            // Add the space charge field coming from the current spikes of hghg
-            dgamma = efield.getHGHGdgamma(ip);
-            // cout << "Got dgamma " << ip << endl;
-            gamma = beam->beam.at(is).at(ip).gamma + dgamma;
+            gamma = beam->beam.at(is).at(ip).gamma;
             theta = beam->beam.at(is).at(ip).theta + autophase; // add autophase here
             double x = beam->beam.at(is).at(ip).x;
             double y = beam->beam.at(is).at(ip).y;
@@ -91,6 +83,17 @@ void BeamSolver::advance(double delz, Beam *beam, vector< Field *> *field, Undul
             // Update the beam
             beam->beam.at(is).at(ip).gamma = gamma;
             beam->beam.at(is).at(ip).theta = theta;
+        }
+        // Calculate the LSC (bunching model)
+        // cout << "ISLICE=" << is << endl;
+        // cout << "hghg space charge with current=" << beam->current.at(is) << "A. Slicelength = " << beam->slicelength << " slicespacing="<< beam->reflength << " and LDRIFT=" << delz << endl;
+        efield.hghgRange(&beam->beam.at(is), beam->current.at(is), beam->reflength, beam->slicelength, delz, is);
+        // cout << "npart " << beam->beam.at(is).size() << endl;
+        for (int ip = 0; ip < beam->beam.at(is).size(); ip++) {
+            // Add the space charge field coming from the current spikes of hghg
+            dgamma = efield.getHGHGdgamma(ip);
+            // cout << "Got dgamma " << ip << endl;
+            beam->beam.at(is).at(ip).gamma += dgamma;
         }
     }
 }
