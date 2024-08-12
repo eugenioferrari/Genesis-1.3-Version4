@@ -482,9 +482,15 @@ void DiagBeam::getValues(Beam *beam,std::map<std::string,std::vector<double> >&v
         if (filter["aux"]) {
             this->storeValue(val,"efield",idx,beam->eloss[is] + beam->longESC[is]);
             this->storeValue(val,"wakefield",idx,beam->eloss[is]);
-            this->storeValue(val,"LSCfield",idx,beam->longESC[is]);
-            this->storeValue(val,"SSCfield",idx,beam->getSCField(is));
-            this->storeValue(val,"HGHGSCfield",idx,beam->getHGHGSCField(is));
+            if (beam->hasLongSCField()) {
+                this->storeValue(val,"LSCfield",idx,beam->longESC[is]);
+            }
+            if (beam->hasShortSCField()) {
+                this->storeValue(val, "SSCfield", idx, beam->getSCField(is));
+            }
+            if (beam->hasHGHGSCField()) {
+                this->storeValue(val, "HGHGSCfield", idx, beam->getHGHGSCField(is));
+            }
             this->storeValue(val,"xmin",idx,xmin);
             this->storeValue(val,"xmax",idx,xmax);
             this->storeValue(val,"pxmin",idx,pxmin);

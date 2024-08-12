@@ -31,6 +31,9 @@ public:
     double getSCField(int);
     double getHGHGSCField(int);
     void checkAllocation(unsigned long i);
+    bool hasHGHGSCField();
+    bool hasLongSCField();
+    bool hasShortSCField();
 
 private:
     complex<double> cpart;
@@ -58,8 +61,20 @@ inline double BeamSolver::getSCField(int islice){
     return efield.getSCField(islice);
 }
 
+inline bool BeamSolver::hasLongSCField(){
+    return efield.hasLongRange();
+}
+
+inline bool BeamSolver::hasShortSCField(){
+    return efield.hasShortRange();
+}
+
 inline double BeamSolver::getHGHGSCField(int islice){
     return efield.getHGHGSCField(islice);
+}
+
+inline bool BeamSolver::hasHGHGSCField(){
+    return efield.hasHGHGRange();
 }
 
 inline void BeamSolver::initEField(double rmax, int ngrid, int nz, int nphi, double lambda, bool longr, bool hghgrange, int maxharm, double scaling){

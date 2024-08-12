@@ -32,6 +32,7 @@ public:
     double getHGHGdgamma(unsigned long i);
     bool hasShortRange() const;
     bool hasHGHGRange() const;
+    bool hasLongRange() const;
     void allocateForOutput(unsigned long nslice);
     void allocateForHGHGOutput(unsigned long nslice);
     double getSCField(int);
@@ -74,6 +75,10 @@ inline double EFieldSolver::getHGHGSCField(int islice) {
 
 inline bool EFieldSolver::hasShortRange() const{
     return (nz > 0) & (ngrid > 2);
+}
+
+inline bool EFieldSolver::hasLongRange() const{
+    return longrange;
 }
 
 inline bool EFieldSolver::hasHGHGRange() const{
