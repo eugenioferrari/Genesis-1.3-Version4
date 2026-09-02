@@ -1,6 +1,7 @@
 # Change Log
 
-### [Unreleased]
+### [4.6.15] - 2026/09/02
+- Release of Version 4.6.15
 - The result of a run no longer depends on the number of cores it is run on. Every random
 sequence, shot noise included, is now keyed on the position of a slice within the time window
 rather than on the core which holds that slice, so a given `seed` produces a given realization
