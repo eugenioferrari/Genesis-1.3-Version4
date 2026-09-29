@@ -347,6 +347,7 @@ void EFieldSolver::hghgRange(vector<Particle> *beam, double current, double slic
     // Correction for the phase of the current spike
     // compute the bunching at the fundamental
     complex<double> bunching = 0;
+    complex<double> Bh;
     const   complex<double> img(0.0,1.0);
     //
     // bunching = np.sum(np.exp(1j * k_seed * data_space * 1)) / npart
@@ -354,13 +355,13 @@ void EFieldSolver::hghgRange(vector<Particle> *beam, double current, double slic
     // t_phase = bunching_phase * slicespacing / (2 * np.pi)
     // data_space -= t_phase
     double s_now;
-    for (int ip = 0; ip < npart; ip++) {
-        s_now = beam->at(ip).theta * slicelength / (2 * pi);
-        bunching += exp(img * k_seed * s_now * static_cast<double>(1));
-    }
-    bunching /= static_cast<double>(npart);
-    double bunching_phase = arg(bunching);
-    double t_phase = bunching_phase * slicespacing / (2 * pi);
+    // for (int ip = 0; ip < npart; ip++) {
+    //     s_now = beam->at(ip).theta * slicelength / (2 * pi);
+    //     bunching += exp(img * k_seed * s_now * static_cast<double>(1));
+    // }
+    // bunching /= static_cast<double>(npart);
+    // double bunching_phase = arg(bunching);
+    // double t_phase = bunching_phase * slicespacing / (2 * pi);
     /*
     cout << "t_phase=" << t_phase << endl;
     cout << "bunching " << bunching << endl;
@@ -368,21 +369,19 @@ void EFieldSolver::hghgRange(vector<Particle> *beam, double current, double slic
     cout << "sigmax" << sigmax << endl;
     cout << "sigmay" << sigmay << endl;
     */
-    // double Bh;
 
     for (int nh = 1; nh <= maxharm; nh++) {
-        double Bh;
         bunching = 0;
         for (int ip = 0; ip < npart; ip++) {
-            s_now = beam->at(ip).theta * slicelength / (2 * pi) - t_phase;
-            bunching += exp(img * k_seed * s_now * static_cast<double>(nh));
+            s_now = beam->at(ip).theta * slicelength / (2 * pi);
+            bunching += exp(-img * k_seed * s_now * static_cast<double>(nh));
         }
         bunching /= static_cast<double>(npart);
-        Bh = abs(bunching);
+        // Bh = abs(bunching);
         // cout << "h=" << nh << " b=" << Bh << endl;
         for (int ip = 0; ip < npart; ip++) {
-            s_now = beam->at(ip).theta * slicelength / (2 * pi) - t_phase;
-            hghgez[ip] += Bh * sin(static_cast<double>(nh) * k_seed * s_now) / static_cast<double>(nh);
+            s_now = beam->at(ip).theta * slicelength / (2 * pi);
+            hghgez[ip] += real(Bh * exp(img * static_cast<double>(nh) * k_seed * s_now) / (img * static_cast<double>(nh)));
         }
     }
     // finally convert to dgamma
