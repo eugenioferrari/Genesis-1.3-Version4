@@ -381,7 +381,7 @@ void EFieldSolver::hghgRange(vector<Particle> *beam, double current, double slic
         // cout << "h=" << nh << " b=" << Bh << endl;
         for (int ip = 0; ip < npart; ip++) {
             s_now = beam->at(ip).theta * slicelength / (2 * pi);
-            hghgez[ip] += real(Bh * exp(img * static_cast<double>(nh) * k_seed * s_now) / (img * static_cast<double>(nh)));
+            hghgez[ip] += real(bunching * exp(img * static_cast<double>(nh) * k_seed * s_now) / (img * static_cast<double>(nh)));
         }
     }
     // finally convert to dgamma
